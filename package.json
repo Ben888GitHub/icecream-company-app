@@ -8,10 +8,16 @@
     "start": "next start"
   },
   "dependencies": {
+    "@hookform/error-message": "0.0.2",
+    "bootstrap": "^4.5.0",
     "luxon": "^1.24.1",
     "next": "9.4.4",
+    "rand-token": "^1.0.1",
     "react": "16.13.1",
+    "react-alert": "^7.0.2",
+    "react-bootstrap": "^1.2.2",
     "react-dom": "16.13.1",
-    "react-hook-form": "^6.0.4"
+    "react-hook-form": "^6.0.4",
+    "react-router-dom": "^5.2.0"
   }
 }

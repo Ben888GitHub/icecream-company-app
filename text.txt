@@ -20,3 +20,14 @@
               Instantly deploy your Next.js site to a public URL with Vercel.
             </p>
           </a>
+
+
+<Router>
+                <Link to="./complete">
+           </Link>
+                <Switch>
+                  <Route path="/complete">
+                    <Complete />
+                  </Route>
+                </Switch>
+              </Router>

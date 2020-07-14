@@ -1,31 +1,241 @@
 import Head from "next/head";
 import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { Form, Button, DropdownButton, Dropdown } from "react-bootstrap";
+import { DateTime } from "luxon";
+import randtoken from "rand-token";
+
+// Function to display errors
+function ErrorMessage({ error }) {
+  if (error) {
+    switch (error.type) {
+      case "required":
+        return <p style={{ color: "red" }}>^This field is required</p>;
+      case "maxLength":
+        return <p style={{ color: "red" }}>Maximum Length: 20</p>;
+      case "pattern":
+        return (
+          <p style={{ color: "red" }}>Please enter a valid email address</p>
+        );
+      default:
+        return null;
+    }
+  }
+  return null;
+}
 
 export default function Home() {
+  const [inputValue, setInputValue] = useState([]);
+  const [items, setItems] = useState([{}]);
+  // const [items, setItems] = useState({});
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [flavor, setFlavor] = useState("");
+
+  const [date, setDate] = useState("");
+
+  const [nameOutput, setNameOutput] = useState("Name");
+  const [emailOutput, setEmailOutput] = useState("Email");
+  const [flavorOutput, setFlavorOutput] = useState("Flavor");
+  const [randomToken, setRandomToken] = useState("Token");
+
+  const [showComplete, setShowComplete] = useState(false);
+  const [showForm, setShowForm] = useState(true);
+
+  const appendAll = (text1, text2, text3) => {
+    // const newItems = [...items, { text }];
+    var allElement = {};
+    allElement.text1 = text1;
+    allElement.text2 = text2;
+    allElement.text3 = text3;
+    const newItems = items.push({ allElement: allElement });
+    setItems(newItems);
+  };
+
+  const { register, errors, handleSubmit } = useForm();
+
+  // Function to submit form
+  const onSubmit = (data) => {
+    console.log(data);
+    console.log(data.firstName);
+    console.log(data.email);
+    console.log(data.flavor);
+    // alert(JSON.stringify(data));
+
+    // appendName(name);
+    // appendEmail(email);
+    appendAll(name, email, flavor);
+    // appendAll(data);
+    console.log(items[1].allElement);
+    console.log(items[1].allElement.text1); //name
+    console.log(items[1].allElement.text2); //email
+    console.log(items[1].allElement.text3); //flavor
+
+    setNameOutput(items[1].allElement.text1);
+    setEmailOutput(items[1].allElement.text2);
+    setFlavorOutput(items[1].allElement.text3);
+
+    var token = randtoken.generate(6);
+    console.log(token);
+    setRandomToken(token);
+
+    setShowComplete(!showComplete);
+    if (!data.firstName || !data.email || !data.flavor) {
+      setShowComplete(showComplete);
+    } else if (data.firstName && data.email && data.flavor) {
+      setShowComplete(!showComplete);
+      setShowForm(!showForm);
+    }
+
+    var date = DateTime.local().toISO(); // Luxon Date (UTC ISO)
+    setDate(date);
+
+    setName("");
+    setEmail("");
+    setFlavor("");
+
+    setItems([{}]);
+  };
+
+  const backToForm = () => {
+    setShowComplete(false);
+    setShowForm(true);
+    window.location.reload(false);
+  };
+
   return (
     <div className="container">
       <Head>
-        <title>Create Next App</title>
+        <title>Ice Cream Company</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main>
-        <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+        {/* <h2 className="title">Welcome to Ice Cream Company</h2>
+        <p>{"\n"}</p> */}
+        <p style={{ fontSize: 35, fontWeight: "500" }}>ICE CREAM GIVEAWAY</p>
+        <p>{"\n"}</p>
+        {showForm && (
+          <div
+            className="card"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexWrap: "wrap",
+              maxWidth: "800px",
+              marginTop: "-2rem",
+            }}
+          >
+            <form
+              style={{ borderRadius: 20 }}
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <p style={{ fontSize: 30 }}>Fill the details</p>
+              <p style={{ fontSize: 20, marginTop: 10 }}>Name:</p>
+              <input
+                style={{ fontSize: 20 }}
+                name="firstName"
+                placeholder="Enter name"
+                value={name}
+                onChange={(e) => new setName(e.target.value)}
+                ref={register({ required: true, maxLength: 20 })}
+              />
+              <ErrorMessage error={errors.firstName} />
+              <p>{"\n"}</p>
+              <p>{"\n"}</p>
 
-        <p className="description">
-          Get started by editing <code>pages/index.js</code>
-        </p>
+              <p style={{ fontSize: 20, marginTop: 15 }}>Email:</p>
+              <input
+                style={{ fontSize: 20 }}
+                name="email"
+                placeholder="Enter email"
+                value={email}
+                onChange={(e) => new setEmail(e.target.value)}
+                ref={register({ required: true, pattern: /^\S+@\S+$/i })}
+              />
+              <ErrorMessage error={errors.email} />
 
-        <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-        </div>
+              <p style={{ fontSize: 20, marginTop: 15 }}>Select your flavor:</p>
+              <select
+                style={{ fontSize: 20 }}
+                name="flavor"
+                placeholder="flavor"
+                value={flavor}
+                onChange={(e) => new setFlavor(e.target.value)}
+                ref={register({ required: true })}
+              >
+                <option value="">Choose...</option>
+                <option value="chocolate">Chocolate</option>
+                <option value="strawberry">Strawberry</option>
+                <option value="vanilla">Vanilla</option>
+              </select>
+              <ErrorMessage error={errors.flavor} />
+
+              <p>{"\n"}</p>
+              <p>{"\n"}</p>
+              <div
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {/* <input style={{ fontSize: 20 }} type="submit" /> */}
+                <button
+                  style={{ fontSize: 20, marginTop: 20 }}
+                  type="submit"
+                  // onClick={() => setShowComplete(!showComplete)}
+                  // onClick={() => {if }}
+                >
+                  submit
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+        {showComplete && (
+          <div className="card">
+            <div>
+              <p style={{ fontSize: 22 }}> Thank you for sharing, {date}</p>
+              <p>{"\n"}</p>
+            </div>
+            <div>
+              <p>{"\n"}</p>
+            </div>
+            <div style={{ marginTop: 10 }}>
+              <p style={{ fontSize: 22 }}>Name: {nameOutput} </p>
+              <p>{"\n"}</p>
+            </div>
+            <div>
+              <p>{"\n"}</p>
+            </div>
+            <div style={{ marginTop: 10 }}>
+              <p style={{ fontSize: 22 }}>Email: {emailOutput} </p>
+              <p>{"\n"}</p>
+            </div>
+            <div>
+              <p>{"\n"}</p>
+            </div>
+            <div style={{ marginTop: 10 }}>
+              <p style={{ fontSize: 22 }}>Flavor: {flavorOutput} </p>
+            </div>
+            <div style={{ marginTop: 10 }}>
+              <p style={{ fontSize: 22 }}>Token: {randomToken} </p>
+            </div>
+            <div style={{ marginTop: 15 }}>
+              <button
+                onClick={backToForm}
+                style={{ fontSize: 20 }}
+                type="button"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        )}
       </main>
 
+      <p>{"\n"}</p>
       <footer>
         <a
           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
@@ -52,8 +262,6 @@ export default function Home() {
           flex: 1;
           display: flex;
           flex-direction: column;
-          justify-content: center;
-          align-items: center;
         }
 
         footer {
@@ -94,7 +302,7 @@ export default function Home() {
         .title {
           margin: 0;
           line-height: 1.15;
-          font-size: 4rem;
+          font-size: 2.8rem;
         }
 
         .title,
@@ -123,7 +331,7 @@ export default function Home() {
           flex-wrap: wrap;
 
           max-width: 800px;
-          margin-top: 3rem;
+          margin-top: -2rem;
         }
 
         .card {
