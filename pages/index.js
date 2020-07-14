@@ -64,18 +64,18 @@ export default function Home() {
 
     // appendName(name);
     // appendEmail(email);
-    appendAll(name, email, flavor);
+    appendAll(name, email, flavor); // The arguments from the from values
     // appendAll(data);
     console.log(items[1].allElement);
     console.log(items[1].allElement.text1); //name
     console.log(items[1].allElement.text2); //email
     console.log(items[1].allElement.text3); //flavor
 
-    setNameOutput(items[1].allElement.text1);
-    setEmailOutput(items[1].allElement.text2);
-    setFlavorOutput(items[1].allElement.text3);
+    setNameOutput(items[1].allElement.text1); // Update and display the written name
+    setEmailOutput(items[1].allElement.text2); // Update and display the written email
+    setFlavorOutput(items[1].allElement.text3); // Update and display the written flavor
 
-    var token = randtoken.generate(6);
+    var token = randtoken.generate(6); // Generate 6 random alphanumeric tokens
     console.log(token);
     setRandomToken(token);
 
@@ -138,7 +138,7 @@ export default function Home() {
                 name="firstName"
                 placeholder="Enter name"
                 value={name}
-                onChange={(e) => new setName(e.target.value)}
+                onChange={(e) => setName(e.target.value)}
                 ref={register({ required: true, maxLength: 20 })}
               />
               <ErrorMessage error={errors.firstName} />
@@ -151,7 +151,7 @@ export default function Home() {
                 name="email"
                 placeholder="Enter email"
                 value={email}
-                onChange={(e) => new setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 ref={register({ required: true, pattern: /^\S+@\S+$/i })}
               />
               <ErrorMessage error={errors.email} />
@@ -162,7 +162,7 @@ export default function Home() {
                 name="flavor"
                 placeholder="flavor"
                 value={flavor}
-                onChange={(e) => new setFlavor(e.target.value)}
+                onChange={(e) => setFlavor(e.target.value)}
                 ref={register({ required: true })}
               >
                 <option value="">Choose...</option>
