@@ -25,7 +25,7 @@ function ErrorMessage({ error }) {
 }
 
 export default function Home() {
-  const [inputValue, setInputValue] = useState([]);
+  // const [inputValue, setInputValue] = useState([]);
   const [items, setItems] = useState([{}]);
   // const [items, setItems] = useState({});
   const [name, setName] = useState("");
